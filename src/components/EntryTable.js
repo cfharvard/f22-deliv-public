@@ -18,10 +18,10 @@ export default function EntryTable({ entries }) {
          <Table sx={{ minWidth: 650 }} aria-label="simple table">
             <TableHead>
                <TableRow sx={{backgroundColor:"#A2C692"}}>
-                  <TableCell>Name</TableCell>
+                  <TableCell align="center">Name</TableCell>
                   <TableCell align="center">Description</TableCell>
                   <TableCell align="center">Category</TableCell>
-                  <TableCell align="center">Visit Site</TableCell>
+                  <TableCell align="center">Visit</TableCell>
                   <TableCell align="center">Edit</TableCell>
                </TableRow>
             </TableHead>
@@ -31,7 +31,7 @@ export default function EntryTable({ entries }) {
                      key={entry.id}
                      sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                   >
-                     <TableCell component="th" scope="row">
+                     <TableCell align="center" component="th" scope="row">
                         {entry.name}
                      </TableCell>
                      <TableCell align="center">{entry.description}</TableCell>
