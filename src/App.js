@@ -23,7 +23,7 @@ import EntryModal from './components/EntryModal';
 import { mainListItems } from './components/listItems';
 import { db, SignInScreen } from './utils/firebase';
 import { emptyEntry } from './utils/mutations';
-
+import ForestIcon from '@mui/icons-material/Forest';
 // MUI styling constants
 
 const drawerWidth = 240;
@@ -72,7 +72,13 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
   }),
 );
 
-const mdTheme = createTheme();
+const mdTheme = createTheme({
+  palette: {
+    primary: {
+      main: "#223b05",
+    },
+  }
+});
 
 // App.js is the homepage and handles top-level functions like user auth.
 
@@ -129,12 +135,12 @@ export default function App() {
       return (
         <Grid container spacing={3}>
           <Grid item xs={12}>
+            <EntryTable entries={entries} />
+          </Grid>
+          <Grid item xs={12}>
             <Stack direction="row" spacing={3}>
               <EntryModal entry={emptyEntry} type="add" user={currentUser} />
             </Stack>
-          </Grid>
-          <Grid item xs={12}>
-            <EntryTable entries={entries} />
           </Grid>
         </Grid>
       )
@@ -165,10 +171,11 @@ export default function App() {
             >
               <MenuIcon />
             </IconButton>
+            <ForestIcon sx={{margin: "10px"}}/>
             <Typography
               component="h1"
               variant="h6"
-              color="inherit"
+              color="white"
               noWrap
               sx={{ flexGrow: 1 }}
             >
@@ -177,7 +184,7 @@ export default function App() {
             <Typography
               component="h1"
               variant="body1"
-              color="inherit"
+              color="white"
               noWrap
               sx={{
                 marginRight: '20px',
@@ -190,7 +197,9 @@ export default function App() {
               sx={{
                 marginTop: '5px',
                 marginBottom: '5px',
-                display: isSignedIn ? 'inline' : 'none'
+                display: isSignedIn ? 'inline' : 'none',
+                backgroundColor: '#654321',
+                fontColor: 'white'
               }}
               onClick={() => firebase.auth().signOut()}
             >

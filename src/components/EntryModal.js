@@ -1,4 +1,4 @@
-import OpenInNewIcon from '@mui/icons-material/OpenInNew';
+import { Edit } from '@mui/icons-material';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -13,7 +13,8 @@ import TextField from '@mui/material/TextField';
 import * as React from 'react';
 import { useState } from 'react';
 import { categories } from '../utils/categories';
-import { addEntry } from '../utils/mutations';
+import { addEntry, editEntry, deleteEntry } from '../utils/mutations';
+import Grid from '@mui/material/Grid';
 
 // Modal component for individual entries.
 
@@ -29,12 +30,12 @@ export default function EntryModal({ entry, type, user }) {
    // State variables for modal status
 
    // TODO: For editing, you may have to add and manage another state variable to check if the entry is being edited.
-
+   
    const [open, setOpen] = useState(false);
    const [name, setName] = useState(entry.name);
    const [link, setLink] = useState(entry.link);
    const [description, setDescription] = useState(entry.description);
-   const [category, setCategory] = React.useState(entry.category);
+   const [category, setCategory] = React.useState(entry.category);   
 
    // Modal visibility handlers
 
@@ -66,9 +67,25 @@ export default function EntryModal({ entry, type, user }) {
       handleClose();
    };
 
+
    // TODO: Add Edit Mutation Handler
+   const handleEdit = () => { // Overwrites entry to the values held in the form to allow access to Doc ID
+
+      entry.name = name;
+      entry.link  = link;
+      entry.description = description;
+      entry.category = category;
+      
+      editEntry(entry).catch(console.error);
+      handleClose();
+   };
+
 
    // TODO: Add Delete Mutation Handler
+   const handleDelete = () => {
+      deleteEntry(entry).catch(console.error);
+      handleClose();
+   };
 
    // Button handlers for modal opening and inside-modal actions.
    // These buttons are displayed conditionally based on if adding or editing/opening.
@@ -76,7 +93,7 @@ export default function EntryModal({ entry, type, user }) {
 
    const openButton =
       type === "edit" ? <IconButton onClick={handleClickOpen}>
-         <OpenInNewIcon />
+         <Edit />
       </IconButton>
          : type === "add" ? <Button variant="contained" onClick={handleClickOpen}>
             Add entry
@@ -85,8 +102,21 @@ export default function EntryModal({ entry, type, user }) {
 
    const actionButtons =
       type === "edit" ?
-         <DialogActions>
-            <Button onClick={handleClose}>Cancel</Button>
+         <DialogActions sx={{padding:'10px'}}>
+            {/* Edit Button calls handleEdit onClick 
+            Delete button calls handleDelete onClick
+
+            Used arrow function to prevent infinite rerendering issues
+            */}
+            <Grid container justifyContent="space-between">
+               <Grid item>
+                  <Button onClick={() => window.confirm("Are you sure you want to delete this entry?") ? handleDelete(entry) : null} variant="contained" color="warning" sx={{backgroundColor: "#8b0000"}}>Delete</Button>
+               </Grid>
+               <Grid item>
+                  <Button onClick={handleClose}>Cancel</Button>
+                  <Button onClick={() => handleEdit(entry)} variant="contained" sx={{padding:'2'}}>Edit</Button> 
+               </Grid>
+            </Grid>
          </DialogActions>
          : type === "add" ?
             <DialogActions>
@@ -105,11 +135,14 @@ export default function EntryModal({ entry, type, user }) {
                <TextField
                   margin="normal"
                   id="name"
-                  label="Name"
+                  label="Name "
                   fullWidth
+                  helperText={`${name.length}/50`} // Displays counter
+                  required
                   variant="standard"
                   value={name}
                   onChange={(event) => setName(event.target.value)}
+                  inputProps={{ maxLength: 50 }} // Sets maximum length
                />
                <TextField
                   margin="normal"
@@ -126,11 +159,14 @@ export default function EntryModal({ entry, type, user }) {
                   id="description"
                   label="Description"
                   fullWidth
+                  helperText={`${description.length}/200`} // Displays counter
                   variant="standard"
                   multiline
                   maxRows={8}
+                  required
                   value={description}
                   onChange={(event) => setDescription(event.target.value)}
+                  inputProps={{ maxLength: 200 }} // Sets maximum length
                />
 
                <FormControl fullWidth sx={{ "margin-top": 20 }}>
@@ -140,6 +176,7 @@ export default function EntryModal({ entry, type, user }) {
                      id="demo-simple-select"
                      value={category}
                      label="Category"
+                     required
                      onChange={(event) => setCategory(event.target.value)}
                   >
                      {categories.map((category) => (<MenuItem value={category.id}>{category.name}</MenuItem>))}

@@ -6,6 +6,7 @@ import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
+import Launch from '@mui/icons-material/Launch';
 import EntryModal from './EntryModal';
 import { getCategory } from '../utils/categories';
 
@@ -16,12 +17,12 @@ export default function EntryTable({ entries }) {
       <TableContainer component={Paper}>
          <Table sx={{ minWidth: 650 }} aria-label="simple table">
             <TableHead>
-               <TableRow>
+               <TableRow sx={{backgroundColor:"#A2C692"}}>
                   <TableCell>Name</TableCell>
-                  <TableCell align="right">Link</TableCell>
-                  <TableCell align="right">User</TableCell>
-                  <TableCell align="right">Category</TableCell>
-                  <TableCell align="right">Open</TableCell>
+                  <TableCell align="center">Description</TableCell>
+                  <TableCell align="center">Category</TableCell>
+                  <TableCell align="center">Visit Site</TableCell>
+                  <TableCell align="center">Edit</TableCell>
                </TableRow>
             </TableHead>
             <TableBody>
@@ -33,10 +34,10 @@ export default function EntryTable({ entries }) {
                      <TableCell component="th" scope="row">
                         {entry.name}
                      </TableCell>
-                     <TableCell align="right"><Link href={entry.link}>{entry.link}</Link></TableCell>
-                     <TableCell align="right">{entry.user}</TableCell>
-                     <TableCell align="right">{getCategory(entry.category).name}</TableCell>
-                     <TableCell sx={{ "padding-top": 0, "padding-bottom": 0 }} align="right">
+                     <TableCell align="center">{entry.description}</TableCell>
+                     <TableCell align="center">{getCategory(entry.category).name}</TableCell>
+                     <TableCell align="center"><a href={entry.link} target="_blank" rel="noreferrer"><Launch /></a></TableCell>
+                     <TableCell sx={{ "padding-top": 0, "padding-bottom": 0 }} align="center">
                         <EntryModal entry={entry} type="edit" />
                      </TableCell>
                   </TableRow>
